@@ -37,23 +37,26 @@ def initial_cond (x,i):
 		
 def plot_char(y_l, y_r, t_i , t_e):
 	ini_cond = 1											# initial conditions \in {1,2,3} 
-	num_points = 30
+	num_points = 30											# number of points used to discretice space and time
 	y = np.zeros(num_points)
 	values_char = np.zeros(num_points*num_points)
 	values_solution = np.zeros(num_points*num_points)
-	zeiten = np.zeros(num_points)
+	zeiten = np.zeros(num_points)							#time
 	
 	for i in range(num_points):
 		y[i] = y_l + ((y_r - y_l)*(i/num_points))
 	for i in range(num_points):
 		zeiten[i] = t_i + ((t_e - t_i) * i/num_points)
 	for j in range(num_points):
+		#compute characteristic lines in time for fixed y 
 		values_char[j*num_points : (j+1)*num_points] = y[j] + zeiten * initial_cond(y[j], ini_cond)
+		#drag solution along characteristics to obtain solution
 		values_solution[j*num_points : (j+1)*num_points] = initial_cond(y + zeiten[j] * initial_cond(y,ini_cond) , ini_cond)
+	#plot characteristics
 	for j in range(num_points):
 		plt.plot(zeiten , values_char[j*num_points : (j+1)*num_points])
 	plt.show()
-	
+	#plot solution
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
 	ax.plot_surface(np.outer(zeiten,np.ones(num_points)) , y , np.split(values_solution,num_points), rstride=4, cstride=4, color='b')

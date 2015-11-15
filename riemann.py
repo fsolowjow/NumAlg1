@@ -15,17 +15,18 @@ def Riemann_2D_solve( A , q_l, q_r):
 	alpha = LA.solve(eigenvector, q_l - q_r)
 	w1 = alpha[0] * eigenvector[0] 
 	w2 = alpha[1] * eigenvector[1]
-	time = 0.5
+	time = 0.5									#the fixed time 
 	x = np.arange(-1, 3 , 0.1)
 	y = np.arange(-1, 3 , 0.1)
 	solution1 = np.zeros(np.size(x*y))
 	solution2 = np.zeros(np.size(x*y))
 	
+	#Using the formula to compute the solution
 	for j in range(np.size(y)):
 		for i in range(np.size(x)):
 			solution1[i] = (q_l + ( heavyside( x[i] - eigenvalue[0] * time) * w1 ) + ( heavyside( y[j] - eigenvalue[1] * time) * w2 ) )[0]
 			solution2[i] = (q_l + ( heavyside( x[i] - eigenvalue[0] * time) * w1 ) + ( heavyside( y[j] - eigenvalue[1] * time) * w2 ) )[1]
-
+	#Plot
 	fig = plt.figure()
 	ax = fig.add_subplot(111, projection='3d')
 	ax.plot_surface(np.outer( x , np.ones(np.size(x))) , y , np.split(solution1,np.size(x)), rstride=4, cstride=4, color='b')
